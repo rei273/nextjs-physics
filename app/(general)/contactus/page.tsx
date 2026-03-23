@@ -1,7 +1,7 @@
 import ContactForm from "@/app/ui/contact-form";
 //import PhysTLogo from "@/app/ui/phys-logo";
 import Image from "next/image";
-import lightImage from "@/app/assets/illustration_physics_light.png";
+import lightImage from "@/app/assets/illustration/illustration_physics_light.png";
 import Breadcrumbs from "@/app/ui/tutorials/breadcrumbs";
 import { Suspense } from "react";
 export default function Page() {

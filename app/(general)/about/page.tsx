@@ -4,11 +4,11 @@ import Image from "next/image";
 // import Link from "next/link";
 // import { lusitana, montserrat } from "@/app/ui/fonts";
 //import styles from '@/app/ui/home.module.css';
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import futuristicPlanet from "@/app/assets/front_page_cover_futuristic_planet.jpg";
-import conceptImage from "@/app/assets/front_page_cover_engineer.jpg";
-import adaptiveImage from "@/app/assets/illustratiion_balance.jpg";
-import featuresImage from "@/app/assets/illustration_features_selection.jpg";
+//import { ArrowRightIcon } from "@heroicons/react/24/outline";
+//import futuristicPlanet from "@/app/assets/illustration/front_page_cover_engineer.jpg";
+import conceptImage from "@/app/assets/illustration/front_page_cover_engineer.jpg";
+import adaptiveImage from "@/app/assets/illustration/illustratiion_balance.jpg";
+import featuresImage from "@/app/assets/illustration/illustration_features_selection.jpg";
 
 
 export default function Page() {

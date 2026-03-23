@@ -320,7 +320,7 @@ export async function fetchSurveyAnswersBySurveyId(survey_id: string) {
 
 export async function generateDBEntriesForLessons(parsedAIContent: AIContent){
 
-  const stages = parsedContent.stages;
+  const stages = parsedAIContent.stages;
   const fetchUrl =
   process.env.NODE_ENV === "production"
     ? `http://localhost:3003/generate_lesson_content/`
@@ -329,10 +329,16 @@ export async function generateDBEntriesForLessons(parsedAIContent: AIContent){
   stages.forEach(async (stage, index) => {
     
     const topics = stage.topics;
-    topics.map((topic, Idx) => {
-      const prompt = `Generate a detailed lesson on the topic ${topic}`
-      const lessContent = fetch()
-    })
+    if (topics) {
+      topics.map((topic, Idx) => {
+        const prompt = `Generate a detailed lesson on the topic ${topic}`
+        const lessContent = fetch(fetchUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt })
+        })
+      })
+    }
   })
 
 }

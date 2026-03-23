@@ -11,12 +11,12 @@ import {
   AcademicCapIcon,
 } from "@heroicons/react/24/outline";
 import futuristicPlanet from "@/app/ui/front_page_cover_futuristic_planet.jpg";
-import benefitsImage from "@/app/assets/illustration_pencil.png";
+import benefitsImage from "@/app/assets/illustration/illustration_pencil.png";
 import adaptiveImage from "@/app/ui/illustratiion_balance.jpg";
 import featuresImage from "@/app/ui/illustration_features_selection.jpg";
-import heroImageDesktop from "@/app/assets/hero_illustration_road_map_desktop.png";
-import heroImageMobile from "@/app/assets/hero_illustration_road_map_mobile.png";
-import compassImage from "@/app/assets/illustration_compass.png";
+import heroImageDesktop from "@/app/assets/illustration/hero_illustration_road_map_desktop.png";
+import heroImageMobile from "@/app/assets/illustration/hero_illustration_road_map_mobile.png";
+import compassImage from "@/app/assets/illustration/illustration_compass.png";
 
 export default function Home() {
   return (

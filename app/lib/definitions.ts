@@ -4,6 +4,7 @@
 // However, these types are generated automatically if you're using an ORM such as Prisma.
 
 //import { z } from 'zod';
+import { ReactNode } from 'react';
 
 export type User = {
   id: string;
@@ -261,7 +262,7 @@ export type SurveyFormState =
     }
   | undefined;
 
-interface SubMilestone {
+export interface SubMilestone {
   title: string;
   description?: string;
   status?: "Ready" | "Locked" | "Completed"; // Status for individual topics
@@ -271,7 +272,7 @@ export interface Milestone {
   title: string;
   description: string;
   //topics: string[];
-  topics: subMilestone[];
+  topics: SubMilestone[];
   activities: string[];
   positionX?: number; //position along the SVG path using SVG markers
   positionY?: number;
@@ -281,7 +282,7 @@ export interface stage {
   title: string;
   goals?: string;
   focus?: string;
-  topics?: string[];
+  topics?: SubMilestone[];
   activities?: string[];
 }
 export interface AIContent {

@@ -74,7 +74,11 @@ export async function createAuthSession(userId: string, email: string) {
   );
 }
 
-//verify cookies
+/**
+ * Verifies the authentication session from cookies.
+ * @returns {Promise<{ user: any, session: any } | { user: null, session: null }>} 
+ * Returns an object containing the user and session if valid, otherwise both are null.
+ */
 export async function verifyAuth() {
   const sessionCookie = cookies().get(lucia.sessionCookieName);
 
@@ -119,8 +123,8 @@ export async function verifyAuth() {
       );
     }
   } catch (error) {
-    console.log("invalid cookie session with error: ");
-    console.log(error);
+    console.error("invalid cookie session with error: ");
+    console.error(error);
   }
 
   return result;

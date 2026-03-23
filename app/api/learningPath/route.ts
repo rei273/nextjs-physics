@@ -6,7 +6,7 @@ import { MongoClient } from "mongodb";
 
 const CACHE_FILE = "AI_api_cache.json"; //Cache file to store responses
 
-async function updateCacheFile(cache: JSON) {
+async function updateCacheFile(cache: any) {
   const closeAsync = promisify(close);
   const writeFileAsync = promisify(writeFile);
   try {
@@ -19,11 +19,11 @@ async function updateCacheFile(cache: JSON) {
   }
 }
 
-function validateCache(cache) {
+function validateCache(cache: any) {
   if (typeof cache !== "object" || cache === null) return false;
 
   for (const [key, value] of Object.entries(cache)) {
-    if (!value.generated_learning_path) {
+    if (typeof value === "object" && value !== null && !(value as any).generated_learning_path) {
       console.error(`Invalid entry for survey id ${key}.`);
       return false;
     }
@@ -32,7 +32,7 @@ function validateCache(cache) {
   return true;
 }
 
-export async function fetchLearningPath(survey_id: str) {
+async function fetchLearningPath(survey_id: string) {
   // Promisify fs methods for easier use
   const readFileAsync = promisify(readFile);
   const appendFileAsync = promisify(appendFile);
@@ -47,7 +47,7 @@ export async function fetchLearningPath(survey_id: str) {
   const year = currDate.getFullYear();
 
   
-  let cache = {};
+  let cache: Record<string, any> = {};
 
   // Ensure the cache file exists
   try {
@@ -67,9 +67,9 @@ export async function fetchLearningPath(survey_id: str) {
   }
 
   let client;
-  let collection;
+  let collection: any;
   try {
-    client = new MongoClient(process.env.MONGO_URI);
+    client = new MongoClient(process.env.MONGO_URI!);
     await client.connect();
     console.log("MongoDB Client connected.")
     const db = client.db("nextjs-physics");
@@ -78,7 +78,7 @@ export async function fetchLearningPath(survey_id: str) {
     console.log("Error connecting to MongoDB or initializing collection: ", error);
   } 
 
-  const cachedLearningPath = await collection.findOne({ survey_id });
+  const cachedLearningPath = collection ? await collection.findOne({ survey_id }) : null;
   
   if (cachedLearningPath) {
     console.log("Cache hit from Mongo for survey_id: ", survey_id);
@@ -138,12 +138,13 @@ export async function fetchLearningPath(survey_id: str) {
         console.error("Cache validation failed. Not saving.");
       }
 
-      await collection.insertOne({
-        survey_id: survey_id,
-        learning_path: generatedLearningPath["generated_learning_path"]["content"],
-        createdAt: new Date()
-
-      })
+      if (collection) {
+        await collection.insertOne({
+          survey_id: survey_id,
+          learning_path: generatedLearningPath["generated_learning_path"]["content"],
+          createdAt: new Date()
+        })
+      }
 
       return generatedLearningPath["generated_learning_path"]["content"];
     }
@@ -168,6 +169,8 @@ export async function GET(request: Request) {
     const learningPath = await fetchLearningPath(survey_id);
     return NextResponse.json(learningPath, { status: 200 });
   } catch (error) {
-    return NextResponse.json({message: error.message || 'An unknown error occurred', details: error.stack || null}, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    const errorStack = error instanceof Error ? error.stack : null;
+    return NextResponse.json({message: errorMessage, details: errorStack}, { status: 500 });
   }
 }

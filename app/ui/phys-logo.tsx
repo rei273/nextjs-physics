@@ -1,5 +1,4 @@
 import { lusitana } from "@/app/ui/fonts";
-import Logo from "@/app/ui/GVLogo_1.png";
 import Image from "next/image";
 
 export default function PhysTLogo() {
@@ -11,7 +10,7 @@ export default function PhysTLogo() {
       >
         <Image
           className="rounded-lg h-40 w-40"
-          src={Logo}
+          src="/GVLogo_1.png"
           alt="Grok Vectors logo"
           width={1024}
           height={1024}

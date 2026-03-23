@@ -1,4 +1,5 @@
 
+import React from "react";
 import {ModalProps} from "@/app/lib/definitions";
 
 // type ModalProps = {
@@ -11,9 +12,9 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return (
-    <div className={styles.modaloverlay}>
-      <div className={styles.modalcontent}>
-        <div className={styles.modalcancelbutton}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="relative bg-white rounded-lg shadow-lg max-w-2xl w-full p-6">
+        <div className="flex justify-end">
           <button onClick={onClose}> <XMarkIcon className="w-6" /></button>
           {/* <Button onClick={onClose}>Cancel</Button> */}
         </div>

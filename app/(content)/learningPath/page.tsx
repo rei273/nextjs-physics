@@ -71,8 +71,7 @@ function SuruveyContent() {
         </div> */}
       {/* </div> */}
       <div className="lg:w-full">
-      {console.log("survey_id to be passed to timeline: ", survey_id)}
-        <TimelineSVG survey_id = {survey_id} />
+        {survey_id && <TimelineSVG survey_id = {survey_id} />}
       </div>
     </main>
   );

@@ -18,7 +18,7 @@ function parseContent(content: string) {
     activities: /\*\*Activities\*\*:\s*\n([\s\S]*?)\n\n/,
   };
 
-  const result = {};
+  const result: Record<string, any> = {};
   result.title =
     content.match(patterns.title)?.[1] || "Personalized Learning Path";
   result.goal = content.match(patterns.goal)?.[1] || null;
@@ -69,9 +69,9 @@ function extractMilestones(parsedContent: AIContent) {
   stages.forEach((stage, index) => {
     milestones.push({
       title: stage.title,
-      description: stage.focus ? stage.focus : stage.goals,
-      topics: stage.topics,
-      activites: stage.activities,
+      description: stage.focus ?? stage.goals ?? "",
+      topics: stage.topics ?? [],
+      activities: stage.activities ?? [],
       positionX: index * 15 - 5,
       positionY: 1,
     });

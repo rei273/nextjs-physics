@@ -3,7 +3,7 @@ import Image from "next/image";
 // import futuristicPlanet from "@/app/ui/assets/front_page_cover_futuristic_planet.jpg";
 // import conceptImage from "@/app/ui/front_page_cover_engineer.jpg";
 // import adaptiveImage from "@/app/ui/illustratiion_balance.jpg";
-import claraImage from "@/app/assets/clara_agent.png";
+import claraImage from "@/app/assets/clara/clara_agent.png";
 export default function Page() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between pt-16 pb-28 max-w-8xl">
