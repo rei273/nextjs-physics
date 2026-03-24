@@ -1,10 +1,8 @@
 import { google, lucia } from "@/app/lib/session";
 import { cookies } from "next/headers";
 import { OAuth2RequestError } from "arctic";
-//import { generateIdFromEntropySize } from "lucia";
 import { v4 as uuidv4 } from "uuid";
-import { GoogleUser } from "@/app/lib/definitions";
-import { User } from "@/app/lib/definitions";
+import { GoogleUser, User } from "@/app/lib/definitions";
 import { sql } from "@vercel/postgres";
 
 async function getUser(google_id: string): Promise<User | undefined> {
@@ -19,27 +17,29 @@ async function getUser(google_id: string): Promise<User | undefined> {
 }
 
 export async function GET(request: Request): Promise<Response> {
-  if (!process.env.AUTH_SECRET) {
-    throw new Error("Auth Secret are required!");
+  if (!process.env.AUTH_SECRET || !google) {
+    return new Response("Google OAuth is not configured", {
+      status: 500,
+    });
   }
 
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const state = url.searchParams.get("state");
+  const cookieStore = await cookies();
   
   const codeVerifier = process.env.AUTH_SECRET;
-  const storedState = cookies().get("google_oauth_state")?.value ?? null;
+  const storedState = cookieStore.get("google_oauth_state")?.value ?? null;
   if (!code || !state || !storedState || state !== storedState) {
     return new Response(null, {
       status: 400,
     });
   }
-  const callbackUrl = cookies().get("callbackUrl")?.value ?? null;
-  //console.log("callbackURL from google OAuth: ", callbackUrl); // http://localhost:3000/login?callbackUrl=%2Ftutorials%2Felectrical-charge
 
-//   const redirectURL = decodeURIComponent(callbackUrl?.split('callbackUrl=')[1]) ?? '/chat' //decodeURIComponent will throw error if callbackUrl is null or undefined!!
-  //console.log("redirectURL ", redirectURL);
-  const redirectURL = callbackUrl ? decodeURIComponent(callbackUrl.split('callbackUrl=')[1] || '/chat') : '/chat'; //check for callbackUrl before attempting to decode and split. If callbackUrl is defined, then we split and decode. If the split fails to find the parameter (array [1]), we default to '/chat'. Finally, if the entire callback is null or undefined, we default to '/chat'
+  const callbackUrl = cookieStore.get("callbackUrl")?.value ?? null;
+  const redirectURL = callbackUrl
+    ? decodeURIComponent(callbackUrl.split("callbackUrl=")[1] || "/chat")
+    : "/chat";
 
   try {
     const tokens = await google.validateAuthorizationCode(code, codeVerifier);
@@ -69,9 +69,9 @@ export async function GET(request: Request): Promise<Response> {
         google_id,
         name,
         picture,
-      }); //lucia will use {email, google_id, name, picture} these names and look for db column names in user_sessions table.
+      });
       const sessionCookie = lucia.createSessionCookie(session.id);
-      cookies().set(
+      cookieStore.set(
         sessionCookie.name,
         sessionCookie.value,
         sessionCookie.attributes
@@ -84,12 +84,11 @@ export async function GET(request: Request): Promise<Response> {
       });
     }
 
-    //const userId = generateIdFromEntropySize(10); // 16 characters long
     const userId = uuidv4();
 
     const { sub, name, picture, email } = googleUser;
 
-    const google_id = sub; //since user_sessions db table has a column named google_id which is for sub
+    const google_id = sub;
 
     await sql`INSERT INTO users (id, name, email, password, google_id, picture) VALUES (${userId}, ${googleUser.name}, ${googleUser.email}, 'google_password', ${googleUser.sub}, ${googleUser.picture});`;
 
@@ -100,7 +99,7 @@ export async function GET(request: Request): Promise<Response> {
       picture,
     });
     const sessionCookie = lucia.createSessionCookie(session.id);
-    cookies().set(
+    cookieStore.set(
       sessionCookie.name,
       sessionCookie.value,
       sessionCookie.attributes

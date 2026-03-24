@@ -3,7 +3,6 @@
 import NavLinksMainHeader from "../nav-links/nav-links-mainheader";
 import Link from "next/link";
 //import styles from '@/app/ui/home.module.css';
-import { headers } from "next/headers";
 //import logo from "@/app/ui/logo.png"
 import PhysTLogo from "@/app/ui/phys-logo";
 import Image from "next/image";

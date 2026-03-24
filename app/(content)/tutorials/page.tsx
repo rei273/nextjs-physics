@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   title: "Tutorials",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function Page() {
 
     

@@ -6,17 +6,20 @@ export async function GET(request: Request): Promise<Response> {
   const refererUrl = request.headers.get("referer");
   console.log("referer URL", refererUrl);
 
-  if (!process.env.AUTH_SECRET) {
-    throw new Error("Auth Secret are required!");
+  if (!process.env.AUTH_SECRET || !google) {
+    return new Response("Google OAuth is not configured", {
+      status: 500,
+    });
   }
 
   const codeVerifier = process.env.AUTH_SECRET;
   const state = generateState();
+  const cookieStore = await cookies();
   const url: URL = await google.createAuthorizationURL(state, codeVerifier, {
     scopes: ["email", "profile"],
   });
-  //console.log(url);
-  cookies().set("google_oauth_state", state, {
+
+  cookieStore.set("google_oauth_state", state, {
     path: "/",
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
@@ -26,7 +29,7 @@ export async function GET(request: Request): Promise<Response> {
 
   // Set the callbackUrl cookie
   if (refererUrl) {
-    cookies().set("callbackUrl", refererUrl, {
+    cookieStore.set("callbackUrl", refererUrl, {
       path: "/",
       secure: process.env.NODE_ENV === "production",
       httpOnly: true, // Optional: secure callback URL from client-side access
@@ -34,6 +37,6 @@ export async function GET(request: Request): Promise<Response> {
       sameSite: "lax",
     });
   }
-  //console.log(cookies().toString());
+
   return Response.redirect(url);
 }

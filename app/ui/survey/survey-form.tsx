@@ -1,9 +1,10 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useActionState } from "react";
 import ProgressBar from "@/app/ui/progressBar";
 import Button from "@/app/ui/button";
 import LoadingSpinner from "@/app/ui/loading-spinner";
-import { useFormState } from "react-dom";
+//import { useFormState } from "react-dom";
+
 import {
   fetchSurveyQuestions,
   fetchSurveyQuestionOptions,
@@ -13,10 +14,12 @@ import { SurveyQuestion } from "@/app/lib/definitions";
 import { useRouter } from "next/navigation";
 
 export default function SurveyForm() {
-  const [formState, formAction, isPending] = useFormState(
-    createSurvey,
-    undefined
-  );
+  // const [formState, formAction, isPending] = useFormState(
+  //   createSurvey,
+  //   undefined
+  // );
+
+  const [formState, formAction, isPending] = useActionState(createSurvey, undefined);
 
   const [currentQuestion, setCurrentQuestion] = useState(0); //keep track of current question for progress bar
   //   const [loading, setLoading] = useState(true); // State to manage loading status

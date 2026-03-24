@@ -1,34 +1,19 @@
-import { verifyAuth, getSessionData } from "@/app/lib/session";
-import { redirect } from "next/navigation";
-import Button from "@/app/ui/button";
+import { verifyAuth } from "@/app/lib/session";
 import Breadcrumbs from "@/app/ui/tutorials/breadcrumbs";
-import React, { useState } from "react";
 import { fetchDiscussions, fetchDisussionReplies } from "@/app/lib/data";
 import { unstable_noStore as noStore } from "next/cache";
-import AskQuestionClient from "@/app/ui/chat/ask-question-client";
 import DiscussionReplyClient from "@/app/ui/chat/discussion-reply-client";
 
 export default async function Page() {
   noStore();
-  //verify if user is logged in
+
   const result = await verifyAuth();
   const userId = result.user;
-  // if (!result.user) {
-  //   return redirect("/login");
-  // }
-
-  // const sessionData = result.session;
-  // console.log(sessionData);
-  // console.log(sessionData.email);
-  // const username = sessionData?.email?.split("@")[0];
 
   const [discussions, replies] = await Promise.all([
     fetchDiscussions(),
     fetchDisussionReplies(),
   ]);
-  //const replies = await fetchDisussionReplies();
-
-  const date = new Date().toISOString().split("T")[0];
 
   return (
     <main className="max-w-7xl">
